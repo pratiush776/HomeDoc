@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const Information = () => {
-    
+    const [outputData,setOutputData]=useState("")
     // State to manage form data and errors
     const [formData, setFormData] = useState({
         age: '',
@@ -38,26 +38,25 @@ const Information = () => {
             setErrors({})
             fetchAPI(formData); // Pass the input value to fetchAPI
         }
-
     };
 
     const fetchAPI = async (data) => {
         console.log(data)
         try {
-          const response = await fetch("http://localhost:8080/api", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body:  JSON.stringify(data) // Send the input text in the body
-          });
-    
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-    
-        //   const data = await response.json();
-        //   setOutput(data.response); // Assume response contains a 'response' key
+            fetch('http://localhost:8080/api', {
+                        method: 'POST',  
+                        headers: {
+                            'Content-Type': 'application/json'  
+                        },
+                        body: JSON.stringify(data)  
+                        })
+                .then(response => response.json())  
+                .then(result => {
+                    console.log(JSON.stringify(result))
+                })
+                .catch(err=>{
+                    console.log("there is an error",err)
+                });
         } catch (error) {
           console.error("Error fetching data:", error);
         }

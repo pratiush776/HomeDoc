@@ -5,7 +5,6 @@ import Information from './components/Information';
 
 function App() {
 
-  
   return (
 
     <div
