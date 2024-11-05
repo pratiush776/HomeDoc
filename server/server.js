@@ -28,5 +28,5 @@ app.get("/test",(req,res)=>{
 })
 
 app.listen(8080, ()=> {
-    console.log("Server started running on port 8080...")
+    console.log("Server started running on port"+PORT)
 });
