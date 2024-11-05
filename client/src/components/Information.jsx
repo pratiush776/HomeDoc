@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Information = () => {
+const Information = ({setResult}) => {
     const [outputData,setOutputData]=useState("")
     // State to manage form data and errors
     const [formData, setFormData] = useState({
@@ -52,7 +52,7 @@ const Information = () => {
                         })
                 .then(response => response.json())  
                 .then(result => {
-                    console.log(JSON.stringify(result))
+                    setResult(result)
                 })
                 .catch(err=>{
                     console.log("there is an error",err)
@@ -63,14 +63,14 @@ const Information = () => {
       };
 
     return (
-        <div className="">
+        <div className="flex flex-col justify-center w-1/2 m-auto p-4 rounded-3xl text-center"
+        style={{ backgroundColor: `rgb(205,204,204)` }}>
 
-            <h2 className="text-3xl font-bold text-indigo-600 mb-12 mx-auto">
-                Enter your information to diagnose your symptoms <br />
+            <h2 className="text-3xl font-bold text-black mb-12 mx-auto">
+                Enter your information to diagnose <br />
                 <span
-                className='text-sm text-black font-normal underline'>
-                    Note: We use Artificial Intelligence and data from credible 
-                medical databases for diagnosis. 
+                className='text-sm text-black font-normal '>
+                    Note: We use Artificial Intelligence (llama3) for diagnosis. 
                 </span>
                 </h2>
 
@@ -114,16 +114,14 @@ const Information = () => {
                 </div>
 
                 <div className="mb-4">
-                    <label htmlFor="symptoms" className="block text-2xl font-medium text-gray-700 mb-1">
-                        Enter your symptoms (Note: Entering more symptoms leads to a more accurate diagnosis):
-                    </label>
                     <textarea
                         id="symptoms"
                         name="symptoms"
                         value={formData.symptoms}
                         onChange={handleChange}
                         rows="8"
-                        className="w-9/12 block mx-auto my-8 border border-stone-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                        className="w-9/12 block mx-auto my-8 border border-stone-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2"
+                        placeholder='Enter your symptoms (Note: Entering more symptoms and explanations lead to a more accurate diagnosis)'
                     ></textarea>
                     {errors.symptoms && <p className="text-sm text-red-600">{errors.symptoms}</p>}
                 </div>
