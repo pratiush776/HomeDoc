@@ -1,9 +1,7 @@
 const express = require("express");
 const app = express();
 const cors=require("cors");
-const allowedOrigins ={
-    origin: ["https://homedoc-rfey.onrender.com/","http://localhost:5173/"]
-};
+const allowedOrigins =["https://homedoc-rfey.onrender.com/","http://localhost:5173/"];
 const main = require("./api")
 
 const PORT = process.env.PORT || 3000;
