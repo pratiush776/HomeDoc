@@ -44,6 +44,6 @@ app.get("/test",(req,res)=>{
     res.json("server is running...")
 })
 
-app.listen(8080, ()=> {
+app.listen(PORT, ()=> {
     console.log("Server started running on port"+PORT)
 });
