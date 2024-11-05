@@ -5,6 +5,9 @@ const corsOptions ={
     origin: ["http://localhost:5173"]
 };
 const main = require("./api")
+
+const PORT = process.env.PORT || 3000;
+
 app.use(express.json());
 app.use(cors(corsOptions));
 
