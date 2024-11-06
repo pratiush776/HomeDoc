@@ -73,7 +73,7 @@ const Information = ({setResult}) => {
                 </span>
                 </h2>
 
-            <form onSubmit={handleSubmit}>
+            <form>
 
                 <div className='flex justify-around'>
                     <div className="mb-4">
@@ -126,7 +126,7 @@ const Information = ({setResult}) => {
                 </div>
 
                 <button
-                type='submit'
+                onClick={handleSubmit}
                     className="block mx-auto bg-indigo-600 text-white py-2 px-4 my-8 rounded-md text-2xl
                     hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
                     sm:w-full sm:max-w-xs sm:py-4 sm:px-6 sm:text-xl sm:rounded-lg"
