@@ -14,7 +14,9 @@ User Information:
 - Age: ${age}
 - Gender: ${gender}
 
-use the system context`;
+use the system context
+
+always give a disclaimer at the end too`;
 
   const completion = await groq.chat.completions
     .create({

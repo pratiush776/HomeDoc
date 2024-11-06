@@ -42,7 +42,6 @@ const Information = ({setResult}) => {
 
     const fetchAPI = async (data) => {
         try {
-            // fetch('/api', {
                 fetch('http://localhost:3000/api', {
                         method: 'POST',  
                         headers: {
