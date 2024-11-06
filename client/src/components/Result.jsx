@@ -15,7 +15,7 @@ const Result = ({ data, resetData}) => {
 
   return (
     <div
-      className="flex flex-col justify-center w-11/12 md:w-3/4 lg:w-1/2 m-auto p-4 rounded-3xl text-center"
+      className="flex flex-col justify-center w-11/12 md:w-3/4 lg:w-1/2 m-auto p-4 rounded-3xl text-center sm:max-w-md"
       style={{ backgroundColor: `rgb(205,204,204)` }}
     >
       {Object.entries(JSON.parse(data)).map(([key, value]) => {

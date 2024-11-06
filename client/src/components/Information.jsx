@@ -62,7 +62,7 @@ const Information = ({setResult}) => {
       };
 
     return (
-        <div className="flex flex-col justify-center w-1/2 m-auto p-4 rounded-3xl text-center"
+        <div class="w-full sm:max-w-md mx-auto bg-white shadow-md rounded-md p-6 mt-10"
         style={{ backgroundColor: `rgb(205,204,204)` }}>
 
             <h2 className="text-3xl font-bold text-black mb-12 mx-auto">
