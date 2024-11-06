@@ -42,13 +42,13 @@ const Information = ({setResult}) => {
 
     const fetchAPI = async (data) => {
         try {
-            fetch('https://homedoc-backend.onrender.com/api', {
+            // fetch('/api', {
+                fetch('http://localhost:3000/api', {
                         method: 'POST',  
                         headers: {
                             'Content-Type': 'application/json'  
                         },
                         body: JSON.stringify(data)  ,
-                        mode:'no-cors'
                         })
                 .then(response => response.json())  
                 .then(result => {
