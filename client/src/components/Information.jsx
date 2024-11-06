@@ -42,7 +42,7 @@ const Information = ({setResult}) => {
 
     const fetchAPI = async (data) => {
         try {
-                fetch('http://localhost:3000/api', {
+                fetch('https://homedoc-backend.onrender.com/api', {
                         method: 'POST',  
                         headers: {
                             'Content-Type': 'application/json'  
@@ -62,7 +62,7 @@ const Information = ({setResult}) => {
       };
 
     return (
-        <div class="w-full sm:max-w-md mx-auto bg-white shadow-md rounded-md p-6 mt-10"
+        <div className="w-full sm:max-w-md mx-auto bg-white shadow-md rounded-md p-6 mt-10"
         style={{ backgroundColor: `rgb(205,204,204)` }}>
 
             <h2 className="text-3xl font-bold text-black mb-12 mx-auto">
@@ -73,7 +73,7 @@ const Information = ({setResult}) => {
                 </span>
                 </h2>
 
-            <form>
+            <form onSubmit={handleSubmit}>
 
                 <div className='flex justify-around'>
                     <div className="mb-4">
@@ -126,7 +126,7 @@ const Information = ({setResult}) => {
                 </div>
 
                 <button
-                onClick={handleSubmit}
+                type='submit'
                     className="block mx-auto bg-indigo-600 text-white py-2 px-4 my-8 rounded-md text-2xl
                     hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
                     sm:w-full sm:max-w-xs sm:py-4 sm:px-6 sm:text-xl sm:rounded-lg"
