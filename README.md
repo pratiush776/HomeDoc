@@ -1,4 +1,3 @@
-HOMEDOC
 Home Doc is a health insight platform powered by AI (Llama3), offering a Symptom Checker for quick, preliminary assessments. Simply enter your age, gender, and symptoms for personalized insights, but always consult a healthcare professional for a definitive diagnosis.
 
 Link to live website: https://homedoc-rfey.onrender.com/
