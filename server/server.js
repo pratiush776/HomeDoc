@@ -3,7 +3,7 @@ const app = express();
 const cors=require("cors");
 const main = require("./api")
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 9000;
 
 app.use(express.static('public'));   
 app.use(express.json());
