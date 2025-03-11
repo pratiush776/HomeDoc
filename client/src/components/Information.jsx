@@ -1,142 +1,236 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from "react";
+import { motion } from "motion/react";
 
-const Information = ({setResult}) => {
-    const [outputData,setOutputData]=useState("")
-    // State to manage form data and errors
-    const [formData, setFormData] = useState({
-        age: '',
-        gender: 'male',
-        symptoms: ''
-    });
-    const [errors, setErrors] = useState({});
+// LoadingState component shows a spinner and rotating messages while waiting for the backend response
+const LoadingState = () => {
+  const messages = [
+    "Analyzing your symptoms...",
+    "Consulting our knowledge base...",
+    "Generating insights...",
+    "Reviewing potential conditions...",
+    "Almost there...",
+  ];
+  const [messageIndex, setMessageIndex] = useState(0);
+  const [elapsedTime, setElapsedTime] = useState(0);
 
-    // Handle input changes
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData(
-            { ...formData,
-                [name]: value 
-            });
+  useEffect(() => {
+    const messageInterval = setInterval(() => {
+      setMessageIndex((prev) => (prev + 1) % messages.length);
+    }, 2500);
+
+    const timeInterval = setInterval(() => {
+      setElapsedTime((prev) => prev + 1);
+    }, 1000);
+
+    return () => {
+      clearInterval(messageInterval);
+      clearInterval(timeInterval);
     };
+  }, []);
 
-    const validate = () => {
-        let formErrors = {};
-        if (!formData.age || formData.age < 1 || formData.age > 100) formErrors.age = 'Age must be a number between 1 and 100';
-        if (!formData.symptoms) formErrors.symptoms = 'Please enter your symptoms';
-        return formErrors;
+  return (
+    <div className="w-full h-screen bg-slate-950 max-w-md mx-auto mt-12 flex flex-col items-center justify-center">
+      <div className="relative w-16 h-16 mb-6">
+        <div className="absolute inset-0 rounded-full border-4 border-blue-200"></div>
+        <div className="absolute inset-0 rounded-full border-4 border-blue-600 border-t-transparent animate-spin"></div>
+      </div>
+
+      <div className="h-8 flex items-center justify-center">
+        <p
+          key={messageIndex}
+          className="text-center text-white animate-fade-in"
+        >
+          {messages[messageIndex]}
+        </p>
+      </div>
+
+      {elapsedTime > 8 && (
+        <p className="text-sm text-gray-600 mt-4 animate-fade-in">
+          This is taking longer than usual. Please wait...
+        </p>
+      )}
+    </div>
+  );
+};
+
+const Information = ({ setResult }) => {
+  const [formData, setFormData] = useState({
+    age: "",
+    gender: "male",
+    symptoms: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  // Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: false }));
     }
+  };
 
-    // Handle form submission
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const validationErrors = validate()
+  const validate = () => {
+    let formErrors = {};
+    if (!formData.age || formData.age < 1 || formData.age > 100)
+      formErrors.age = "Age must be a number between 1 and 100";
+    if (!formData.symptoms.trim())
+      formErrors.symptoms = "Please enter your symptoms";
 
-        // Object.keys(validationErrors) returns a list of the keys of the dict in the same order
-        if (Object.keys(validationErrors).length > 0) {
-            setErrors(validationErrors)
-        } else {
-            setErrors({})
-            fetchAPI(formData); // Pass the input value to fetchAPI
-        }
-    };
+    setErrors(formErrors);
+    return Object.keys(formErrors).length === 0;
+  };
 
-    const fetchAPI = async (data) => {
-        try {
-                fetch('https://homedoc-backend.onrender.com/api', {
-                        method: 'POST',  
-                        headers: {
-                            'Content-Type': 'application/json'  
-                        },
-                        body: JSON.stringify(data)  ,
-                        })
-                .then(response => response.json())  
-                .then(result => {
-                    setResult(result)
-                })
-                .catch(err=>{
-                    console.log("there is an error",err)
-                });
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      };
+  // Handle form submission while preserving your backend interaction (setResult)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
 
-    return (
-        <div className="w-full sm:max-w-md mx-auto bg-white shadow-md rounded-md p-6 mt-10"
-        style={{ backgroundColor: `rgb(205,204,204)` }}>
+    setLoading(true);
+    try {
+      console.log("Submitting form data:", formData);
+      const response = await fetch("https://homedoc-backend.onrender.com/api", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      // Pass the result to the parent via setResult (which controls the ternary rendering)
+      setResult(result);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            <h2 className="text-3xl font-bold text-black mb-12 mx-auto">
-                Enter your information to diagnose <br />
-                <span
-                className='text-sm text-black font-normal '>
-                    Note: We use Artificial Intelligence (llama3) for diagnosis. 
-                </span>
-                </h2>
+  // Show the loading state while fetching data
+  if (loading) return <LoadingState />;
 
-            <form onSubmit={handleSubmit}>
+  return (
+    <div className="h-[90vh] flex items-center justify-center ">
+      <motion.div
+        initial={{
+          opacity: 0.5,
+          filter: "drop-shadow(0 0 0rem rgba(255,255,255,0))",
+        }}
+        whileInView={{ opacity: 1 }}
+        whileHover={{
+          filter: "drop-shadow(0 0 0.25rem rgb(241 245 249))",
+          transition: { duration: 0.3 },
+        }}
+        transition={{
+          delay: 0.3,
+          duration: 0.8,
+          ease: "easeInOut",
+        }}
+        className=" max-h-[45rem] aspect-[2/3] flex flex-col justify-around gap-[1.5rem] items-center bg-slate-700 text-slate-50 rounded-xl p-[2rem]"
+      >
+        <h2 className=" text-3xl font-bold text-center text-slate-100">
+          Enter Your Information
+        </h2>
 
-                <div className='flex justify-around'>
-                    <div className="mb-4">
-                        <label htmlFor="age" className="text-2xl font-medium text-gray-700 mb-1">
-                            Age:
-                        </label>
-                        <input
-                            type="number"
-                            id="age"
-                            name="age"
-                            value={formData.age}
-                            onChange={handleChange}
-                            required
-                            min="1"
-                            max="100"
-                            className="h-9 p-2 border ml-4 border-stone-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        />
-                        {errors.age && <p className="text-sm text-red-600">{errors.age}</p>}
-                    </div>
+        <form
+          onSubmit={handleSubmit}
+          className="text-slate-100 flex flex-col gap-[1rem]"
+        >
+          {/* Age Field */}
+          <div className="space-y-2">
+            <input
+              type="number"
+              id="age"
+              name="age"
+              value={formData.age}
+              onChange={handleChange}
+              required
+              min="1"
+              max="100"
+              placeholder="Enter your age"
+              className={`text-slate-800 w-full h-10 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 ${
+                errors.age ? "border-red-300" : "border-gray-200"
+              }`}
+            />
+            {errors.age && (
+              <p className="text-xs text-red-500 mt-1">{errors.age}</p>
+            )}
+          </div>
 
-                    <div className="mb-4">
-                        <label htmlFor="gender" className="text-2xl font-medium text-gray-700 mb-1">
-                            Gender:
-                        </label>
-                        <select
-                            id="gender"
-                            name="gender"
-                            value={formData.gender}
-                            onChange={handleChange}
-                            className="p-2 ml-4 border border-stone-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                        >
-                            <option value="male">Male</option>
-                            <option value="female">Female</option>
-                            <option value="other">Other</option>
-                        </select>
-                    </div>
-                </div>
+          {/* Gender Field */}
+          <div className="space-y-2">
+            <div className="flex space-x-4">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="male"
+                  checked={formData.gender === "male"}
+                  onChange={handleChange}
+                  className="form-radio"
+                />
+                <span>Male</span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="female"
+                  checked={formData.gender === "female"}
+                  onChange={handleChange}
+                  className="form-radio"
+                />
+                <span>Female</span>
+              </label>
+              <label className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  name="gender"
+                  value="other"
+                  checked={formData.gender === "other"}
+                  onChange={handleChange}
+                  className="form-radio"
+                />
+                <span>Other</span>
+              </label>
+            </div>
+          </div>
 
-                <div className="mb-4">
-                    <textarea
-                        id="symptoms"
-                        name="symptoms"
-                        value={formData.symptoms}
-                        onChange={handleChange}
-                        rows="8"
-                        className="w-9/12 block mx-auto my-8 border border-stone-200 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 p-2"
-                        placeholder='Enter your symptoms (Note: Entering more symptoms and explanations lead to a more accurate diagnosis)'
-                    ></textarea>
-                    {errors.symptoms && <p className="text-sm text-red-600">{errors.symptoms}</p>}
-                </div>
-
-                <button
-                type='submit'
-                    className="block mx-auto bg-indigo-600 text-white py-2 px-4 my-8 rounded-md text-2xl
-                    hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
-                    sm:w-full sm:max-w-xs sm:py-4 sm:px-6 sm:text-xl sm:rounded-lg"
-                    style={{ zIndex: 9999, position: "relative", maxWidth: '200px' }}
-                >
-                    Submit
-                </button>
-            </form>
-        </div>
-    );
+          {/* Symptoms Field */}
+          <div className="space-y-2">
+            <textarea
+              id="symptoms"
+              name="symptoms"
+              value={formData.symptoms}
+              onChange={handleChange}
+              rows="6"
+              placeholder="Describe your symptoms in detail. Enter all relevant history and information for more accurate diagnostics..."
+              className={` text-slate-800 w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-300 ${
+                errors.symptoms ? "border-red-300" : "border-gray-200"
+              }`}
+            ></textarea>
+            {errors.symptoms && (
+              <p className="text-xs text-red-500 mt-1">Symptoms are required</p>
+            )}
+          </div>
+          <p className="text-center text-sm font-light mb-8">
+            Note: We use Artificial Intelligence (llama3) for diagnosis.
+          </p>
+          <button
+            type="submit"
+            className=" mt-[1rem] w-full bg-green-500 hover:bg-green-200 hover:text-slate-800 text-white font-semibold py-2 rounded-lg transition duration-300"
+          >
+            Get Diagnosis
+          </button>
+        </form>
+      </motion.div>
+    </div>
+  );
 };
 
 export default Information;
