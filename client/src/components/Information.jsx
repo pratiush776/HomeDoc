@@ -115,7 +115,7 @@ const Information = ({ setResult }) => {
   if (loading) return <LoadingState />;
 
   return (
-    <div className="h-[90vh] flex items-center justify-center ">
+    <div className="h-auto flex items-center justify-center ">
       <motion.div
         initial={{
           opacity: 0.5,
