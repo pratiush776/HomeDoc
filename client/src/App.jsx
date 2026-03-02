@@ -20,13 +20,14 @@ export default function App() {
         <Hero />
         <div
           id="form"
-          className="relative bg-slate-950 py-[3rem] px-[1.5rem] md:w-screen lg:h-screen lg:flex lg:justify-center lg:items-center"
+          className="relative w-full bg-slate-950 py-[3rem] px-[1.5rem] md:w-screen items-start md:items-center min-h-screen flex justify-center lg:items-center"
         >
           {!data ? (
             <Information setResult={setData} />
           ) : (
             <Result data={data} resetData={resetData} />
           )}
+
           <footer className="text-center absolute left-1/2 -translate-x-1/2 bottom-0 h-[2rem]">
             <p className="text-sm text-slate-400">
               &copy; {new Date().getFullYear()}. All rights reserved.

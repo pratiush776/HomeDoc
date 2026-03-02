@@ -12,8 +12,44 @@ const formatKeyName = (key) => {
 };
 
 const Result = ({ data, resetData }) => {
+  //for debugging - sample api result
+  // data = JSON.stringify({
+  //   possibleDiseases: [
+  //     {
+  //       condition: "No Medical Condition",
+  //       severity:
+  //         "Not Applicable. It seems like you're just having a bad day and decided to express your frustration. No worries, we've all been there!",
+
+  //       explanation:
+  //         "It seems like you're just having a bad day and decided to express your frustration. No worries, we've all been there!",
+  //       Advice:
+  //         "Take a deep breath and try to relax. If you're feeling overwhelmed, consider talking to a friend or family member about what's bothering you.",
+  //     },
+  //   ],
+
+  //   lifestyleAdjustments:
+  //     "If you're feeling stressed or frustrated, try engaging in some relaxing activities like meditation, reading, or going for a walk. Remember to prioritize your mental health and take breaks when you need them.",
+
+  //   recommendations:
+  //     "If you're experiencing persistent feelings of anger or frustration, it may be helpful to speak with a mental health professional who can provide you with personalized guidance and support.",
+
+  //   disclaimer:
+  //     "Please keep in mind that this is not a substitute for professional medical advice. If you're experiencing any physical symptoms or concerns, please consult a qualified healthcare professional for an accurate diagnosis and treatment plan.",
+  // });
   if (!data) {
-    return <p>No data available.</p>;
+    return (
+      <div className="h-screen flex flex-col justify-center items-center bg-slate-950">
+        <h1 className="text-slate-100 font-semibold ">
+          Opps! Something went wrong!
+        </h1>
+        <button
+          onClick={resetData}
+          className="w-[50%] mx-auto mt-5 px-4 py-2 bg-slate-600 text-slate-100 font-semibold rounded shadow-md hover:bg-slate-800 transition"
+        >
+          Try Again
+        </button>
+      </div>
+    );
   }
   try {
     const containerVariants = {
@@ -42,7 +78,7 @@ const Result = ({ data, resetData }) => {
           duration: 0.8,
           ease: "easeInOut",
         }}
-        className=" lg:relative overflow-hidden bg-slate-700 mx-auto lg:h-[80vh]  md:max-w-screen lg:aspect-[2/3] p-[1rem] rounded-3xl"
+        className=" lg:relative overflow-hidden bg-slate-700 mx-auto h-auto min-h-fit md:max-w-screen lg:w-[40em] p-[1rem] rounded-3xl"
       >
         <motion.div
           variants={containerVariants}
@@ -138,15 +174,18 @@ const Result = ({ data, resetData }) => {
         </motion.div>
       </motion.div>
     );
-  } catch {
+  } catch (error) {
+    console.log(error);
     return (
-      <div className="h-screen bg-slate-950">
-        <h1>Opps! Something went wrong!</h1>
+      <div className="h-screen flex flex-col justify-center items-center bg-slate-950">
+        <h1 className="text-slate-100 font-semibold">
+          Opps! Something went wrong!
+        </h1>
         <button
           onClick={resetData}
           className="w-[50%] mx-auto mt-5 px-4 py-2 bg-slate-600 text-slate-100 font-semibold rounded shadow-md hover:bg-slate-800 transition"
         >
-          Diagnose
+          Try Again
         </button>
       </div>
     );
